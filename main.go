@@ -2,17 +2,15 @@ package main
 
 import "errors"
 
-// Essa variável global está simulando um banco de dados
-// que armazenaria as informações relativas aos ativos
-var ativos = []Ativo{}
-
 type Ativo struct {
 	Codigo        string
 	Quantidade    int
 	ValorUnitario float64
 }
 
-func AdicionarAtivo(a Ativo) error {
+type Carteira []Ativo
+
+func (c Carteira) AdicionarAtivo(a Ativo) error {
 	if a.Codigo == "" {
 		return errors.New("É necessário que o código do ativo tenha ao menos um caractere para adicioná-lo na carteira.")
 	}
@@ -25,7 +23,7 @@ func AdicionarAtivo(a Ativo) error {
 		return errors.New("É necessário que a quantidade de ativos seja positiva para adicioná-los na carteira.")
 	}
 
-	ativos = append(ativos, a)
+	c = append(c, a)
 
 	return nil
 }

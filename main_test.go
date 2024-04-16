@@ -5,7 +5,9 @@ import (
 )
 
 func TestAdicionarAtivo(t *testing.T) {
-  got := AdicionarAtivo(Ativo{
+  c := Carteira{}
+
+  got := c.AdicionarAtivo(Ativo{
     Codigo: "STNE",
     Quantidade: 10,
     ValorUnitario: 9.99,
