@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 )
 
 func TestAdicionarAtivo(t *testing.T) {
@@ -14,6 +15,52 @@ func TestAdicionarAtivo(t *testing.T) {
   })
 
   var expected error = nil
+
+  if got != expected {
+    t.Fatalf("got=%q expected=%q", got, expected)
+  }
+}
+
+func TestImprimirAtivos(t *testing.T) {
+  c := Carteira{
+    Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Date(2024, time.April, 16, 0, 0, 0, 0, time.Local) },
+    Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Date(2024, time.April, 15, 0, 0, 0, 0, time.Local) },
+  }
+
+  got := c.ImprimirAtivos()
+
+  // Espera-se um resultado como esse:
+  //
+  // Ativos
+  // -------------------------------------------
+  // |          Codigo |      Quantidade Total |
+  // -------------------------------------------
+  // |            STNE |                     2 |
+  // -------------------------------------------
+  //
+  // STNE
+  // ----------------------------------------
+  // |  Valor Unitario |     Data da Compra |
+  // ----------------------------------------
+  // |            9.99 |         2024-04-16 |
+  // ----------------------------------------
+  // |            9.98 |         2024-04-15 |
+  // ----------------------------------------
+  expected := `Ativos
+-------------------------------------------
+|          Codigo |      Quantidade Total |
+-------------------------------------------
+|            STNE |                     2 |
+-------------------------------------------
+
+STNE
+----------------------------------------
+|  Valor Unitario |     Data da Compra |
+----------------------------------------
+|            9.99 |         2024-04-16 |
+----------------------------------------
+|            9.98 |         2024-04-15 |
+----------------------------------------`
 
   if got != expected {
     t.Fatalf("got=%q expected=%q", got, expected)
