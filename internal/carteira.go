@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"errors"
@@ -134,5 +134,3 @@ func (c Carteira) ImprimirResumoAtivos() string {
 
 	return sb.String()
 }
-
-func main() {}

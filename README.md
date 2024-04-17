@@ -28,3 +28,6 @@ Ferramenta CLI de gerenciamento de investimentos.
 > 1. Criar teste falho
 > 2. Fazer o teste passar
 > 3. Refatorar
+
+> [!NOTE]
+> Para executar os testes, execute o comando `go test ./tests`.
