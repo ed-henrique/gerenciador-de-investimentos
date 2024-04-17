@@ -11,15 +11,8 @@ var (
 	ErrQuantidadeDeAtivosParaVendaExtrapolada = errors.New("Não é possível vender mais unidades do ativo do que as que estão disponíveis na carteira.")
 )
 
-func remove(c Carteira, i int) (Carteira, error) {
-	if i < 0 || i >= len(c) {
-		return nil, errors.New("Não há como remover um elemento com índice negativo ou com índice maior ou igual ao tamanho do vetor.")
-	}
-
-	// Troca o elemento a ser removido com o último elemento do vetor
-	// e devolve o vetor sem o último elemento
-	c[i] = c[len(c)-1]
-	return c[:len(c)-1], nil
+func removeLast(a []Ativo) []Ativo {
+	return a[:len(a)-1]
 }
 
 type Ativo struct {
@@ -29,7 +22,7 @@ type Ativo struct {
 	DataDaCompra  time.Time
 }
 
-type Carteira []Ativo
+type Carteira map[string][]Ativo
 
 func (c Carteira) AdicionarAtivo(a Ativo) error {
 	if a.Codigo == "" {
@@ -48,30 +41,24 @@ func (c Carteira) AdicionarAtivo(a Ativo) error {
 		return errors.New("É necessário que haja uma data de compra para os ativos para adicioná-los na carteira.")
 	}
 
-	c = append(c, a)
+	c[a.Codigo] = append(c[a.Codigo], a)
 
 	return nil
 }
 
 func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
-	var quantidadeTotal int
+	ativos, ok := c[codigo]; 
 
-	for _, a := range c {
-		if a.Codigo == codigo {
-			quantidadeTotal += a.Quantidade
-		}
+	if !ok {
+		return errors.New("É necessário que haja algum ativo com o código inserido.")
 	}
 
-	if quantidade > quantidadeTotal {
+	if quantidade > len(ativos) {
 		return ErrQuantidadeDeAtivosParaVendaExtrapolada
 	}
 
-	var i int
-	for lenAtivos := len(c); lenAtivos != len(c) - quantidade; i++ {
-		if c[i].Codigo == codigo {
-			remove(c, i)
-			lenAtivos--
-		}
+	for i := 0; i < quantidade; i++ {
+		c[codigo] = removeLast(c[codigo])
 	}
 
 	return nil
@@ -79,25 +66,20 @@ func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
 
 func (c Carteira) ImprimirAtivos() string {
 	var sb strings.Builder
-	ativosPorCodigo := map[string][]Ativo{}
-
-	for _, a := range c {
-		ativosPorCodigo[a.Codigo] = append(ativosPorCodigo[a.Codigo], a)
-	}
 
 	sb.WriteString("Ativos\n")
 	sb.WriteString("-------------------------------------------\n")
 	sb.WriteString("|          Codigo |      Quantidade Total |\n")
 	sb.WriteString("-------------------------------------------\n")
 
-	for cod, ativos := range ativosPorCodigo {
+	for cod, ativos := range c {
 		sb.WriteString(fmt.Sprintf("| %15s | %21d |\n", cod, len(ativos)))
 		sb.WriteString("-------------------------------------------\n")
 	}
 
 	sb.WriteString("\n")
 
-	for cod, ativos := range ativosPorCodigo {
+	for cod, ativos := range c {
 		sb.WriteString(fmt.Sprintf("%s\n", cod))
 		sb.WriteString("-------------------------------------------\n")
 		sb.WriteString("|  Valor Unitario |        Data da Compra |\n")

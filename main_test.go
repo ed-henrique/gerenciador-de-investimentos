@@ -25,8 +25,10 @@ func TestAdicionarAtivo(t *testing.T) {
 func TestVenderAtivo(t *testing.T) {
   t.Run("Vender uma unidade do ativo (quantidade inicial = 2)", func(t *testing.T) {
     c := Carteira{
-      Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Now() },
-      Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Now() },
+      "STNE": []Ativo{
+	{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Now() },
+	{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Now() },
+      },
     }
 
     got := c.VenderAtivo("STNE", 1)
@@ -40,8 +42,10 @@ func TestVenderAtivo(t *testing.T) {
 
   t.Run("Vender três unidades do ativo (quantidade inicial = 2)", func(t *testing.T) {
     c := Carteira{
-      Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Now() },
-      Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Now() },
+      "STNE": []Ativo{
+	{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Now() },
+	{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Now() },
+      },
     }
 
     got := c.VenderAtivo("STNE", 3)
@@ -56,8 +60,10 @@ func TestVenderAtivo(t *testing.T) {
 
 func TestImprimirAtivos(t *testing.T) {
   c := Carteira{
-    Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Date(2024, time.April, 16, 0, 0, 0, 0, time.Local) },
-    Ativo{ Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Date(2024, time.April, 15, 0, 0, 0, 0, time.Local) },
+    "STNE": []Ativo{
+      { Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Date(2024, time.April, 16, 0, 0, 0, 0, time.Local) },
+      { Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Date(2024, time.April, 15, 0, 0, 0, 0, time.Local) },
+    },
   }
 
   got := c.ImprimirAtivos()
