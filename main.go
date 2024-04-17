@@ -47,7 +47,7 @@ func (c Carteira) AdicionarAtivo(a Ativo) error {
 }
 
 func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
-	ativos, ok := c[codigo]; 
+	ativos, ok := c[codigo]
 
 	if !ok {
 		return errors.New("É necessário que haja algum ativo com o código inserido.")
@@ -89,6 +89,47 @@ func (c Carteira) ImprimirAtivos() string {
 			sb.WriteString(fmt.Sprintf("| %15.2f | %21s |\n", a.ValorUnitario, a.DataDaCompra.Format("2006-01-02")))
 			sb.WriteString("-------------------------------------------\n")
 		}
+	}
+
+	return sb.String()
+}
+
+func (c Carteira) ImprimirResumoAtivos() string {
+	var (
+		sb                 strings.Builder
+		quantidadeDeAtivos int
+		valorTotal         float64
+	)
+
+	for _, ativos := range c {
+		for _, a := range ativos {
+			quantidadeDeAtivos += a.Quantidade
+			valorTotal += a.ValorUnitario * float64(a.Quantidade)
+		}
+	}
+
+	sb.WriteString("Carteira\n")
+	sb.WriteString("--------------------------------------------\n")
+	sb.WriteString("|  Quantidade de Ativos |      Valor Total |\n")
+	sb.WriteString("--------------------------------------------\n")
+	sb.WriteString(fmt.Sprintf("| %21d | %16.2f |\n", quantidadeDeAtivos, valorTotal))
+	sb.WriteString("--------------------------------------------\n\n")
+
+	sb.WriteString("Ativos\n")
+	sb.WriteString("--------------------------------------------------------------\n")
+	sb.WriteString("|          Codigo |      Quantidade Total |      Valor Total |\n")
+	sb.WriteString("--------------------------------------------------------------\n")
+
+	for codigo, ativos := range c {
+		sb.WriteString(fmt.Sprintf("| %15s | %21d | ", codigo, len(ativos)))
+
+		var valorTotalAtivos float64
+		for _, a := range ativos {
+			valorTotalAtivos += a.ValorUnitario * float64(a.Quantidade)
+		}
+
+		sb.WriteString(fmt.Sprintf("%16.2f |\n", valorTotalAtivos))
+		sb.WriteString("--------------------------------------------------------------\n")
 	}
 
 	return sb.String()
