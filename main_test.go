@@ -107,3 +107,56 @@ STNE
   }
 }
 
+func TestImprimirResumoAtivos(t *testing.T) {
+  c := Carteira{
+    "STNE": []Ativo{
+      { Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Date(2024, time.April, 16, 0, 0, 0, 0, time.Local) },
+      { Codigo: "STNE", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Date(2024, time.April, 15, 0, 0, 0, 0, time.Local) },
+    },
+    "GOOG": []Ativo{
+      { Codigo: "GOOG", Quantidade: 1, ValorUnitario: 9.99, DataDaCompra: time.Date(2024, time.April, 16, 0, 0, 0, 0, time.Local) },
+      { Codigo: "GOOG", Quantidade: 1, ValorUnitario: 9.98, DataDaCompra: time.Date(2024, time.April, 15, 0, 0, 0, 0, time.Local) },
+    },
+  }
+
+  got := c.ImprimirResumoAtivos()
+
+  // Espera-se um resultado como esse:
+  //
+  // Carteira
+  // --------------------------------------------
+  // |  Quantidade de Ativos |      Valor Total |
+  // --------------------------------------------
+  // |                     4 |            39.94 |
+  // --------------------------------------------
+  //
+  // Ativos
+  // --------------------------------------------------------------
+  // |          Codigo |      Quantidade Total |      Valor Total |
+  // --------------------------------------------------------------
+  // |            STNE |                     2 |            19.97 |
+  // --------------------------------------------------------------
+  // |            GOOG |                     2 |            19.97 |
+  // --------------------------------------------------------------
+  expected := `Carteira
+--------------------------------------------
+|  Quantidade de Ativos |      Valor Total |
+--------------------------------------------
+|                     4 |            39.94 |
+--------------------------------------------
+
+Ativos
+--------------------------------------------------------------
+|          Codigo |      Quantidade Total |      Valor Total |
+--------------------------------------------------------------
+|            STNE |                     2 |            19.97 |
+--------------------------------------------------------------
+|            GOOG |                     2 |            19.97 |
+--------------------------------------------------------------
+`
+
+  if got != expected {
+    t.Fatalf("got=%q expected=%q", got, expected)
+  }
+}
+
