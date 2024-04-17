@@ -12,6 +12,7 @@ func TestAdicionarAtivo(t *testing.T) {
     Codigo: "STNE",
     Quantidade: 10,
     ValorUnitario: 9.99,
+    DataDaCompra: time.Now(),
   })
 
   var expected error = nil

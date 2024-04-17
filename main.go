@@ -29,6 +29,10 @@ func (c Carteira) AdicionarAtivo(a Ativo) error {
 		return errors.New("É necessário que a quantidade de ativos seja positiva para adicioná-los na carteira.")
 	}
 
+	if a.DataDaCompra.IsZero() {
+		return errors.New("É necessário que haja uma data de compra para os ativos para adicioná-los na carteira.")
+	}
+
 	c = append(c, a)
 
 	return nil
