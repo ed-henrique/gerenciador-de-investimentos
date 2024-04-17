@@ -7,6 +7,21 @@ import (
 	"time"
 )
 
+var (
+	ErrQuantidadeDeAtivosParaVendaExtrapolada = errors.New("Não é possível vender mais unidades do ativo do que as que estão disponíveis na carteira.")
+)
+
+func remove(c Carteira, i int) (Carteira, error) {
+	if i < 0 || i >= len(c) {
+		return nil, errors.New("Não há como remover um elemento com índice negativo ou com índice maior ou igual ao tamanho do vetor.")
+	}
+
+	// Troca o elemento a ser removido com o último elemento do vetor
+	// e devolve o vetor sem o último elemento
+	c[i] = c[len(c)-1]
+	return c[:len(c)-1], nil
+}
+
 type Ativo struct {
 	Codigo        string
 	Quantidade    int
@@ -34,6 +49,30 @@ func (c Carteira) AdicionarAtivo(a Ativo) error {
 	}
 
 	c = append(c, a)
+
+	return nil
+}
+
+func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
+	var quantidadeTotal int
+
+	for _, a := range c {
+		if a.Codigo == codigo {
+			quantidadeTotal += a.Quantidade
+		}
+	}
+
+	if quantidade > quantidadeTotal {
+		return ErrQuantidadeDeAtivosParaVendaExtrapolada
+	}
+
+	var i int
+	for lenAtivos := len(c); lenAtivos != len(c) - quantidade; i++ {
+		if c[i].Codigo == codigo {
+			remove(c, i)
+			lenAtivos--
+		}
+	}
 
 	return nil
 }
