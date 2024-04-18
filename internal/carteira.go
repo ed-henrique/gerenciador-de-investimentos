@@ -72,13 +72,14 @@ func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
 
 	ativosParaVender := quantidade
 	for ativosParaVender > 0 {
-		if ativosParaVender < c[codigo][0].Quantidade {
+		switch {
+		case ativosParaVender < c[codigo][0].Quantidade:
 			c[codigo][0].Quantidade -= ativosParaVender
 			ativosParaVender = 0 
-		} else if ativosParaVender == c[codigo][0].Quantidade {
+		case ativosParaVender == c[codigo][0].Quantidade:
 			c[codigo] = removePrimeiro(c[codigo])
 			ativosParaVender = 0 
-		} else if quantidade > c[codigo][0].Quantidade {
+		case ativosParaVender > c[codigo][0].Quantidade:
 			ativosParaVender -= c[codigo][0].Quantidade
 			c[codigo] = removePrimeiro(c[codigo])
 		}
