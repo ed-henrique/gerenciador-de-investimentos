@@ -11,8 +11,16 @@ var (
 	ErrQuantidadeDeAtivosParaVendaExtrapolada = errors.New("Não é possível vender mais unidades do ativo do que as que estão disponíveis na carteira.")
 )
 
-func removeLast(a []Ativo) []Ativo {
-	return a[:len(a)-1]
+func removePrimeiro(a []Ativo) []Ativo {
+	return a[1:]
+}
+
+func QuantidadeAtivos(a []Ativo) (quantidade int) {
+	for _, ai := range a {
+		quantidade += ai.Quantidade
+	}
+
+	return
 }
 
 type Ativo struct {
@@ -53,12 +61,27 @@ func (c Carteira) VenderAtivo(codigo string, quantidade int) error {
 		return errors.New("É necessário que haja algum ativo com o código inserido.")
 	}
 
-	if quantidade > len(ativos) {
+	var quantidadeTotal int
+	for _, a := range ativos {
+		quantidadeTotal += a.Quantidade
+	}
+
+	if quantidade > quantidadeTotal {
 		return ErrQuantidadeDeAtivosParaVendaExtrapolada
 	}
 
-	for i := 0; i < quantidade; i++ {
-		c[codigo] = removeLast(c[codigo])
+	ativosParaVender := quantidade
+	for ativosParaVender > 0 {
+		if ativosParaVender < c[codigo][0].Quantidade {
+			c[codigo][0].Quantidade -= ativosParaVender
+			ativosParaVender = 0 
+		} else if ativosParaVender == c[codigo][0].Quantidade {
+			c[codigo] = removePrimeiro(c[codigo])
+			ativosParaVender = 0 
+		} else if quantidade > c[codigo][0].Quantidade {
+			ativosParaVender -= c[codigo][0].Quantidade
+			c[codigo] = removePrimeiro(c[codigo])
+		}
 	}
 
 	return nil
@@ -73,7 +96,7 @@ func (c Carteira) ImprimirAtivos() string {
 	sb.WriteString("-------------------------------------------\n")
 
 	for cod, ativos := range c {
-		sb.WriteString(fmt.Sprintf("| %15s | %21d |\n", cod, len(ativos)))
+		sb.WriteString(fmt.Sprintf("| %15s | %21d |\n", cod, QuantidadeAtivos(ativos)))
 		sb.WriteString("-------------------------------------------\n")
 	}
 
@@ -81,13 +104,13 @@ func (c Carteira) ImprimirAtivos() string {
 
 	for cod, ativos := range c {
 		sb.WriteString(fmt.Sprintf("%s\n", cod))
-		sb.WriteString("-------------------------------------------\n")
-		sb.WriteString("|  Valor Unitario |        Data da Compra |\n")
-		sb.WriteString("-------------------------------------------\n")
+		sb.WriteString("-------------------------------------------------------------------\n")
+		sb.WriteString("|        Quantidade |      Valor Unitario |        Data da Compra |\n")
+		sb.WriteString("-------------------------------------------------------------------\n")
 
 		for _, a := range ativos {
-			sb.WriteString(fmt.Sprintf("| %15.2f | %21s |\n", a.ValorUnitario, a.DataDaCompra.Format("2006-01-02")))
-			sb.WriteString("-------------------------------------------\n")
+			sb.WriteString(fmt.Sprintf("| %17d | %19.2f | %21s |\n", a.Quantidade, a.ValorUnitario, a.DataDaCompra.Format("2006-01-02")))
+		sb.WriteString("-------------------------------------------------------------------\n")
 		}
 	}
 
@@ -121,7 +144,7 @@ func (c Carteira) ImprimirResumoAtivos() string {
 	sb.WriteString("--------------------------------------------------------------\n")
 
 	for codigo, ativos := range c {
-		sb.WriteString(fmt.Sprintf("| %15s | %21d | ", codigo, len(ativos)))
+		sb.WriteString(fmt.Sprintf("| %15s | %21d | ", codigo, QuantidadeAtivos(ativos)))
 
 		var valorTotalAtivos float64
 		for _, a := range ativos {
