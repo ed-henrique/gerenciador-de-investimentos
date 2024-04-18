@@ -7,7 +7,7 @@ Ferramenta CLI de gerenciamento de investimentos.
 ### Funcionalidades
 
 - [x] Adicionar ativo
-- [x] Remover ativo
+- [x] Vender ativo
 - [x] Listar ativos
 - [x] Consultar relatório de ativos
 - [ ] Mostrar menu de escolhas para o usuário
