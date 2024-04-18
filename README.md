@@ -25,8 +25,9 @@ docker run -it --rm eduhenfm/terminal-de-gerenciamento-de-investimentos:latest
 
 ### Extra
 
-- [ ] Persistir dados entre sessões em arquivo `.csv`
 - [x] Conteinerizar a aplicação
+- [ ] Persistir dados entre sessões em arquivo `.csv`
+- [ ] Utilizar [Bubble Tea](https://github.com/charmbracelet/bubbletea) para deixar a aplicação mais apresentável
 
 ## Tecnologias Utilizadas
 
