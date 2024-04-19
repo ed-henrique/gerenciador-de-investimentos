@@ -7,11 +7,13 @@ Ferramenta CLI de gerenciamento de investimentos.
 Execute o comando abaixo:
 
 ```bash
-docker run -it --rm eduhenfm/terminal-de-gerenciamento-de-investimentos:latest
+docker run -it --rm eduhenfm/terminal-de-gerenciamento-de-investimentos:latest -b
 ```
 
 > [!IMPORTANT]
 > É **extremamente recomendado** que você utilize o [Docker](https://www.docker.com/) para executar a aplicação, ao invés de executá-la pelo código-fonte.
+>
+> Além disso, a flag `-b` é utilizada para usar uma versão TUI mais bonita. Caso queira utilizar uma versão mais simples, remova a flag.
 
 ## Roadmap
 
@@ -27,7 +29,7 @@ docker run -it --rm eduhenfm/terminal-de-gerenciamento-de-investimentos:latest
 
 - [x] Conteinerizar a aplicação
 - [ ] Persistir dados entre sessões em arquivo `.csv`
-- [ ] Utilizar [Bubble Tea](https://github.com/charmbracelet/bubbletea) para deixar a aplicação mais apresentável
+- [x] Utilizar [Bubble Tea](https://github.com/charmbracelet/bubbletea) para deixar a aplicação mais apresentável
 
 ## Tecnologias Utilizadas
 
